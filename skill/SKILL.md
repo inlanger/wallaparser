@@ -166,33 +166,33 @@ Adapt `KEYWORDS`, `MIN_PRICE`, `MAX_PRICE` per search session. Add pagination by
 
 ### Cache
 
-**Структура кеша:**
+**Cache structure:**
 ```
 wallaparser/cache/
   YYYY-MM-DD/
-    search_raw.json      — все item из поиска (slug, title, price, shipping, location)
-    search_filtered.json — кандидаты после фильтрации
-    ssr_items.json       — item с полным описанием через SSR
-    sellers.json         — проверенные продавцы
+    search_raw.json      — all items from search (slug, title, price, shipping, location)
+    search_filtered.json — filtered candidates
+    ssr_items.json       — items with full details via SSR scraping
+    sellers.json         — verified sellers
 ```
 
-**Сохранение в кеш** — после каждого глубокого поиска:
-- Объединить все raw-результаты (по ключевым словам, городам, сортировкам) → `search_raw.json`
-- Отфильтрованные кандидаты → `search_filtered.json`
-- SSR-проверенные item → `ssr_items.json` (ключ = slug, значение = полные данные)
-- Проверенные продавцы → `sellers.json` (ключ = user_slug)
+**Saving to cache** — after each deep search:
+- Merge all raw results (across keywords, cities, sort orders) → `search_raw.json`
+- Filtered candidates → `search_filtered.json`
+- SSR-verified items → `ssr_items.json` (key = slug, value = full data)
+- Verified sellers → `sellers.json` (key = user_slug)
 
-**Загрузка кеша** — перед новым поиском:
-- Проверить `cache/` на наличие папок за последние N дней
-- Загрузить `search_raw.json` → пропускать slug которые уже есть (не делать SSR повторно)
-- Загрузить `sellers.json` → не проверять продавцов повторно
-- Цены в кеше могут быть устаревшими — перепроверять при необходимости
+**Loading cache** — before a new search:
+- Check `cache/` for folders from the last N days
+- Load `search_raw.json` → skip slugs already seen (no redundant SSR)
+- Load `sellers.json` → skip already-verified sellers
+- Prices in cache may be stale — re-check when needed
 
-**Формат JSON файлов:**
-- `search_raw.json`: `[{slug, title, price, city, shipping, ...}, ...]` — массив item как из API
-- `search_filtered.json`: такой же формат, подмножество search_raw
-- `ssr_items.json`: `{slug: {title, description, price, condition, seller, delivery}, ...}` — словарь по slug
-- `sellers.json`: `{user_slug: {rating, reviews, sold, shipments, since, top, city}, ...}` — словарь по slug
+**JSON file formats:**
+- `search_raw.json`: `[{slug, title, price, city, shipping, ...}, ...]` — array of items as returned by the API
+- `search_filtered.json`: same format, subset of search_raw
+- `ssr_items.json`: `{slug: {title, description, price, condition, seller, delivery}, ...}` — dict keyed by slug
+- `sellers.json`: `{user_slug: {rating, reviews, sold, shipments, since, top, city}, ...}` — dict keyed by user_slug
 
 ### Seller Check
 
@@ -309,8 +309,8 @@ Also available: `/api/v3/search/filters/brand` and `/api/v3/search/filters/model
 - Price filtering is not a server-side param on the section endpoint — filter client-side after fetching.
 - Default to Valencia coordinates if user doesn't specify location.
 - Present results as a clean table or numbered list, not raw JSON, unless user asks for JSON.
-- После глубокого поиска — всегда сохранять результаты в `cache/YYYY-MM-DD/`.
-- Перед новым поиском — загружать кеш и пропускать уже известные slug'и и продавцов.
+- After a deep search — always save results to `cache/YYYY-MM-DD/`.
+- Before a new search — load the cache and skip already-known slugs and sellers.
 - **`reserved` field gotcha:** can be `bool` (`"reserved": true`) OR object (`"reserved": {"flag": true}`). Always check both: `r = item.get('reserved', False); reserved = r.get('flag', False) if isinstance(r, dict) else bool(r)`.
 
 ## Pitfalls
