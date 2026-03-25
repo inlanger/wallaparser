@@ -1,25 +1,25 @@
 # Wallapop API Structure
 
-> Собрано путём анализа фронтенда es.wallapop.com (Next.js SSR/CSR приложение)
-> Дата: 2026-02-12
+> Collected by analyzing the es.wallapop.com frontend (Next.js SSR/CSR app)
+> Date: 2026-02-12
 
 ---
 
-## 1. Домены и базовые URL
+## 1. Domains and Base URLs
 
-| Домен | Назначение |
-|-------|-----------|
-| `api.wallapop.com` | Основной API (v3) |
-| `es.wallapop.com` | Веб-фронтенд + Next.js BFF API routes |
+| Domain | Purpose |
+|--------|---------|
+| `api.wallapop.com` | Main API (v3) |
+| `es.wallapop.com` | Web frontend + Next.js BFF API routes |
 | `feature-flag.wallapop.com` | Feature flags |
-| `tracking.wallapop.com` | Аналитика/трекинг (RudderStack) |
-| `web-static.wallapop.com` | Статика (иконки, SVG) |
-| `cdn.wallapop.com` | CDN изображений товаров |
-| `cdn-web-home-images.wallapop.com` | CDN изображений для домашней страницы |
-| `about.wallapop.com` | О компании, юр. документы |
-| `ayuda.wallapop.com` | Справочный центр (ES) |
-| `ajuda.wallapop.com` | Справочный центр (PT) |
-| `assistenza.wallapop.com` | Справочный центр (IT) |
+| `tracking.wallapop.com` | Analytics/tracking (RudderStack) |
+| `web-static.wallapop.com` | Static assets (icons, SVG) |
+| `cdn.wallapop.com` | Product image CDN |
+| `cdn-web-home-images.wallapop.com` | Homepage image CDN |
+| `about.wallapop.com` | About, legal documents |
+| `ayuda.wallapop.com` | Help center (ES) |
+| `ajuda.wallapop.com` | Help center (PT) |
+| `assistenza.wallapop.com` | Help center (IT) |
 
 ---
 
@@ -27,106 +27,106 @@
 
 ### 2.1 Wallapop Core API (`api.wallapop.com`)
 
-#### Поиск (Search)
-| Метод | Эндпоинт | Параметры | Описание |
-|-------|----------|-----------|----------|
-| GET | `/api/v3/search/components` | `keywords`, `category_id`, `source` | Основной поиск — возвращает компоненты поисковой выдачи |
-| GET | `/api/v3/search/section` | `keywords`, `source`, `category_id`, `search_id`, `order_by`, `latitude`, `longitude`, `section_type` | Секции результатов поиска (пагинация, подгрузка) |
-| GET | `/api/v3/search/filters/regular-filters` | `keywords`, `source`, `category_id`, `order_by` | Доступные фильтры для поиска |
-| GET | `/api/v3/search/filters/brand` | `category_id`, `keywords`, `order_by` | Фильтры по брендам |
-| GET | `/api/v3/search/filters/model` | `category_id`, `keywords`, `order_by` | Фильтры по моделям |
-| GET | `/api/v3/suggesters/nonlocated` | — | Автокомплит/подсказки поиска |
+#### Search
+| Method | Endpoint | Parameters | Description |
+|--------|----------|------------|-------------|
+| GET | `/api/v3/search/components` | `keywords`, `category_id`, `source` | Main search — returns search result components |
+| GET | `/api/v3/search/section` | `keywords`, `source`, `category_id`, `search_id`, `order_by`, `latitude`, `longitude`, `section_type` | Search result sections (pagination, lazy load) |
+| GET | `/api/v3/search/filters/regular-filters` | `keywords`, `source`, `category_id`, `order_by` | Available search filters |
+| GET | `/api/v3/search/filters/brand` | `category_id`, `keywords`, `order_by` | Brand filters |
+| GET | `/api/v3/search/filters/model` | `category_id`, `keywords`, `order_by` | Model filters |
+| GET | `/api/v3/suggesters/nonlocated` | — | Autocomplete/search suggestions |
 
-#### Детали товара (Item Detail)
-| Метод | Эндпоинт | Параметры | Описание |
-|-------|----------|-----------|----------|
-| GET | `/api/v3/item-detail/components` | `item_id` | Полная информация о товаре (SSR + CSR) |
-| GET | `/api/v3/items/{id}` | — | Данные конкретного товара |
-| GET | `/api/v3/recommendations/{id}` | — | Рекомендации на основе товара |
-| GET | `/api/v3/stock/{id}` | — | Информация о наличии |
+#### Item Detail
+| Method | Endpoint | Parameters | Description |
+|--------|----------|------------|-------------|
+| GET | `/api/v3/item-detail/components` | `item_id` | Full item info (SSR + CSR) |
+| GET | `/api/v3/items/{id}` | — | Specific item data |
+| GET | `/api/v3/recommendations/{id}` | — | Item-based recommendations |
+| GET | `/api/v3/stock/{id}` | — | Stock info |
 
-#### Пользователи (Users)
-| Метод | Эндпоинт | Параметры | Описание |
-|-------|----------|-----------|----------|
-| GET | `/api/v3/users/{id}` | — | Профиль пользователя |
-| GET | `/api/v3/user/type` | — | Тип текущего пользователя |
-| GET | `/api/v3/user/bottom-bar` | — | Конфигурация нижней панели |
-| GET | `/api/v3/user-consents` | — | Согласия пользователя |
+#### Users
+| Method | Endpoint | Parameters | Description |
+|--------|----------|------------|-------------|
+| GET | `/api/v3/users/{id}` | — | User profile |
+| GET | `/api/v3/user/type` | — | Current user type |
+| GET | `/api/v3/user/bottom-bar` | — | Bottom bar configuration |
+| GET | `/api/v3/user-consents` | — | User consents |
 
-#### Авторизация (Auth/Access)
-| Метод | Эндпоинт | Параметры | Описание |
-|-------|----------|-----------|----------|
-| POST | `/api/v3/access/login` | — | Вход (логин/пароль) |
-| POST | `/api/v3/access/email` | — | Вход по email |
-| POST | `/api/v3/access/google` | — | OAuth через Google |
-| POST | `/api/v3/access/facebook` | — | OAuth через Facebook |
-| POST | `/api/v3/access/authorize` | — | Авторизация |
-| POST | `/api/v3/access/refresh` | — | Обновление токена |
-| POST | `/api/v3/mfa/validate` | — | Валидация MFA |
-| POST | `/api/v3/mfa/resend-authorization` | — | Повторная отправка MFA кода |
+#### Auth/Access
+| Method | Endpoint | Parameters | Description |
+|--------|----------|------------|-------------|
+| POST | `/api/v3/access/login` | — | Login (username/password) |
+| POST | `/api/v3/access/email` | — | Email login |
+| POST | `/api/v3/access/google` | — | OAuth via Google |
+| POST | `/api/v3/access/facebook` | — | OAuth via Facebook |
+| POST | `/api/v3/access/authorize` | — | Authorization |
+| POST | `/api/v3/access/refresh` | — | Token refresh |
+| POST | `/api/v3/mfa/validate` | — | MFA validation |
+| POST | `/api/v3/mfa/resend-authorization` | — | Resend MFA code |
 
-#### Категории и навигация
-| Метод | Эндпоинт | Параметры | Описание |
-|-------|----------|-----------|----------|
-| GET | `/api/v3/categories` | `context` | Список категорий |
-| GET | `/api/v3/navigation/categories` | — | Категории для навигации |
+#### Categories and Navigation
+| Method | Endpoint | Parameters | Description |
+|--------|----------|------------|-------------|
+| GET | `/api/v3/categories` | `context` | Category list |
+| GET | `/api/v3/navigation/categories` | — | Navigation categories |
 
-#### Реклама и персонализация
-| Метод | Эндпоинт | Параметры | Описание |
-|-------|----------|-----------|----------|
-| GET | `/api/v3/ads/configuration/user/{id}` | — | Конфигурация рекламы для пользователя |
-| GET | `/api/v3/personalization/experiment` | `initiative` | A/B эксперименты |
+#### Ads and Personalization
+| Method | Endpoint | Parameters | Description |
+|--------|----------|------------|-------------|
+| GET | `/api/v3/ads/configuration/user/{id}` | — | Ad configuration for user |
+| GET | `/api/v3/personalization/experiment` | `initiative` | A/B experiments |
 
-#### Уведомления и мессенджер
-| Метод | Эндпоинт | Параметры | Описание |
-|-------|----------|-----------|----------|
-| GET | `/api/v3/instant-messaging/messages/unread` | — | Непрочитанные сообщения |
+#### Notifications and Messaging
+| Method | Endpoint | Parameters | Description |
+|--------|----------|------------|-------------|
+| GET | `/api/v3/instant-messaging/messages/unread` | — | Unread messages |
 
-#### Оповещения поиска
-| Метод | Эндпоинт | Параметры | Описание |
-|-------|----------|-----------|----------|
-| GET | `/api/v3/searchalerts/savedsearch` | — | Сохранённые поиски |
-| GET | `/api/v3/searchalerts/savedsearch/exists` | `category_id`, `keywords`, `order_by` | Проверка существования сохранённого поиска |
+#### Search Alerts
+| Method | Endpoint | Parameters | Description |
+|--------|----------|------------|-------------|
+| GET | `/api/v3/searchalerts/savedsearch` | — | Saved searches |
+| GET | `/api/v3/searchalerts/savedsearch/exists` | `category_id`, `keywords`, `order_by` | Check if saved search exists |
 
 #### Legacy API (v1)
-| Метод | Эндпоинт | Описание |
-|-------|----------|----------|
-| — | `/api/v1/access` | Авторизация (legacy) |
-| — | `/api/v1/application` | Информация о приложении |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| — | `/api/v1/access` | Authentication (legacy) |
+| — | `/api/v1/application` | Application info |
 
 ### 2.2 Feature Flags (`feature-flag.wallapop.com`)
-| Метод | Эндпоинт | Параметры | Описание |
-|-------|----------|-----------|----------|
-| GET | `/api/v3/featureflag` | `featureFlags` | Получение флагов фич |
+| Method | Endpoint | Parameters | Description |
+|--------|----------|------------|-------------|
+| GET | `/api/v3/featureflag` | `featureFlags` | Get feature flags |
 
 ### 2.3 Next.js BFF Routes (`es.wallapop.com`)
-| Метод | Эндпоинт | Описание |
-|-------|----------|----------|
-| GET | `/api/auth/session` | Сессия текущего пользователя |
-| POST | `/api/auth/signin` | Вход |
-| POST | `/api/auth/delete-session` | Выход (удаление сессии) |
-| GET | `/api/auth/go-to-signout` | Редирект на выход |
-| GET | `/api/delivery/dispute` | Информация о споре по доставке |
-| GET | `/api/delivery/timeline` | Таймлайн доставки |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/auth/session` | Current user session |
+| POST | `/api/auth/signin` | Sign in |
+| POST | `/api/auth/delete-session` | Sign out (delete session) |
+| GET | `/api/auth/go-to-signout` | Redirect to sign out |
+| GET | `/api/delivery/dispute` | Delivery dispute info |
+| GET | `/api/delivery/timeline` | Delivery timeline |
 | GET | `/api/health` | Healthcheck |
-| GET | `/api/identity/v2/envelope` | Идентификация |
-| GET | `/api/identity/v2/envelope/refresh` | Обновление идентификации |
-| GET | `/api/robots` | Robots конфигурация |
-| GET | `/api/static-redirect` | Статические редиректы |
-| GET | `/api/m/{path}` | Мобильный deep link прокси |
+| GET | `/api/identity/v2/envelope` | Identity |
+| GET | `/api/identity/v2/envelope/refresh` | Identity refresh |
+| GET | `/api/robots` | Robots configuration |
+| GET | `/api/static-redirect` | Static redirects |
+| GET | `/api/m/{path}` | Mobile deep link proxy |
 
 ### 2.4 Tracking (`tracking.wallapop.com`)
-| Метод | Эндпоинт | Описание |
-|-------|----------|----------|
-| POST | `/v1/batch` | Batch отправка событий |
-| GET | `/v1/identities/resolve` | Резолв идентификатора пользователя |
-| GET | `/sourceConfig/` | Конфигурация источника |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/v1/batch` | Batch event submission |
+| GET | `/v1/identities/resolve` | Resolve user identifier |
+| GET | `/sourceConfig/` | Source configuration |
 
 ---
 
-## 3. Модели данных
+## 3. Data Models
 
-### 3.1 Item (Товар)
+### 3.1 Item
 ```json
 {
   "id": "string",
@@ -326,12 +326,12 @@
 }
 ```
 
-### 3.5 User Profile Page (дополнительные поля)
+### 3.5 User Profile Page (additional fields)
 ```json
 {
-  "user": "User (см. выше)",
+  "user": "User (see above)",
   "publishedItems": {
-    "meta": "object (пагинация)",
+    "meta": "object (pagination)",
     "data": "Item[]"
   },
   "userStats": {
@@ -393,10 +393,10 @@
 
 ---
 
-## 4. Категории (полный список)
+## 4. Categories (full list)
 
-| ID | Название | Иконка | Подкатегорий |
-|----|---------|--------|-------------|
+| ID | Name | Icon | Subcategories |
+|----|------|------|---------------|
 | 100 | Coches | car | 0 |
 | 14000 | Motos | motorbike | 0 |
 | 12800 | Motor y accesorios | helmet | 5 |
@@ -421,75 +421,75 @@
 
 ---
 
-## 5. Маршруты фронтенда (Next.js Pages)
+## 5. Frontend Routes (Next.js Pages)
 
-| Маршрут | Описание |
-|---------|----------|
-| `/` | Главная страница |
-| `/search` | Поиск (CSR) |
-| `/search/favorites` | Избранные товары |
-| `/item/[itemSlug]` | Страница товара |
-| `/user/[userSlug]/[[...tabSelected]]` | Профиль пользователя |
-| `/auth/signin` | Вход |
-| `/auth/signup` | Регистрация |
-| `/auth/signup/[token]` | Подтверждение регистрации |
-| `/auth/forgot-password` | Восстановление пароля |
-| `/auth/reset-password/[token]` | Сброс пароля |
-| `/auth/account-recovery/[token]` | Восстановление аккаунта |
-| `/auth/onboarding` | Онбординг |
-| `/auth/signout` | Выход |
-| `/checkout/[id]` | Оформление покупки |
-| `/checkout/[id]/[step]` | Шаги оформления |
-| `/bundle-manager/[userId]` | Управление бандлами |
-| `/new-subscription/[subscriptionType]/[[...step]]` | Подписка |
-| `/wall` | Стена (лента) |
-| `/discover-content` | Контент для открытий |
-| `/recommended-videos/[videoId]` | Рекомендованные видео |
-| `/app/search` | Поиск (в приложении) |
-| `/sitemap` | Карта сайта |
-| `/sitemap/[regionSlug]` | Карта сайта по региону |
+| Route | Description |
+|-------|-------------|
+| `/` | Home page |
+| `/search` | Search (CSR) |
+| `/search/favorites` | Favorited items |
+| `/item/[itemSlug]` | Item page |
+| `/user/[userSlug]/[[...tabSelected]]` | User profile |
+| `/auth/signin` | Sign in |
+| `/auth/signup` | Sign up |
+| `/auth/signup/[token]` | Registration confirmation |
+| `/auth/forgot-password` | Password recovery |
+| `/auth/reset-password/[token]` | Password reset |
+| `/auth/account-recovery/[token]` | Account recovery |
+| `/auth/onboarding` | Onboarding |
+| `/auth/signout` | Sign out |
+| `/checkout/[id]` | Checkout |
+| `/checkout/[id]/[step]` | Checkout steps |
+| `/bundle-manager/[userId]` | Bundle management |
+| `/new-subscription/[subscriptionType]/[[...step]]` | Subscription |
+| `/wall` | Wall (feed) |
+| `/discover-content` | Discovery content |
+| `/recommended-videos/[videoId]` | Recommended videos |
+| `/app/search` | Search (in-app) |
+| `/sitemap` | Sitemap |
+| `/sitemap/[regionSlug]` | Sitemap by region |
 | `/wallapop-pro` | Wallapop Pro |
-| `/wallapop-pro-cars` | Wallapop Pro для авто |
-| `/wallapop-pro-contact` | Контакт Pro |
-| `/envios-wallapop` | Доставка Wallapop |
-| `/[...seo-landing]` | SEO лендинги (catch-all) |
-| `/legacy` | Legacy страница |
-| `/not-available` | Недоступно |
-| `/error` | Ошибка |
+| `/wallapop-pro-cars` | Wallapop Pro for cars |
+| `/wallapop-pro-contact` | Pro contact |
+| `/envios-wallapop` | Wallapop delivery |
+| `/[...seo-landing]` | SEO landing pages (catch-all) |
+| `/legacy` | Legacy page |
+| `/not-available` | Not available |
+| `/error` | Error |
 
 ---
 
-## 6. Параметры поиска (Query Parameters)
+## 6. Search Parameters (Query Parameters)
 
-Основные параметры для `/search`:
-- `keywords` — ключевые слова
-- `category_id` — ID категории
-- `order_by` — сортировка (`most_relevance`, `newest`, `price_low_to_high`, `price_high_to_low`)
-- `latitude` / `longitude` — координаты для геопоиска
-- `source` — источник запроса
-- `search_id` — ID поисковой сессии
-- `section_type` — тип секции результатов
-
----
-
-## 7. CDN и изображения
-
-Изображения товаров хранятся на `cdn.wallapop.com/images/` в трёх размерах:
-- `small` — миниатюра
-- `medium` — средний размер
-- `big` — полный размер
-
-Формат URL: `https://cdn.wallapop.com/images/{bucket}/{path}`
-
-Изображения главной страницы: `https://cdn-web-home-images.wallapop.com/home-images-prod/`
-
-Статика дизайн-системы: `https://web-static.wallapop.com/design-system/`
+Main parameters for `/search`:
+- `keywords` — search keywords
+- `category_id` — category ID
+- `order_by` — sort order (`most_relevance`, `newest`, `price_low_to_high`, `price_high_to_low`)
+- `latitude` / `longitude` — coordinates for geo search
+- `source` — request source
+- `search_id` — search session ID
+- `section_type` — result section type
 
 ---
 
-## 8. Авторизация API-запросов (curl)
+## 7. CDN and Images
 
-Для работы с API через curl/программно необходимы следующие хедеры:
+Product images are stored at `cdn.wallapop.com/images/` in three sizes:
+- `small` — thumbnail
+- `medium` — medium size
+- `big` — full size
+
+URL format: `https://cdn.wallapop.com/images/{bucket}/{path}`
+
+Homepage images: `https://cdn-web-home-images.wallapop.com/home-images-prod/`
+
+Design system static assets: `https://web-static.wallapop.com/design-system/`
+
+---
+
+## 8. API Request Authentication (curl)
+
+The following headers are required for API access via curl/programmatically:
 
 ```bash
 curl -s 'https://api.wallapop.com/api/v3/...' \
@@ -500,42 +500,42 @@ curl -s 'https://api.wallapop.com/api/v3/...' \
   -H 'X-DeviceOS: 0'
 ```
 
-**Обязательные хедеры:**
-- `Origin: https://es.wallapop.com` — без него 403 (CloudFront)
-- `Referer: https://es.wallapop.com/` — без него 403
-- `X-DeviceOS: 0` — идентификатор платформы (0 = web)
-- `User-Agent` — стандартный браузерный
+**Required headers:**
+- `Origin: https://es.wallapop.com` — without it: 403 (CloudFront)
+- `Referer: https://es.wallapop.com/` — without it: 403
+- `X-DeviceOS: 0` — platform identifier (0 = web)
+- `User-Agent` — standard browser string
 
-**Авторизация не требуется** для: поиска, просмотра товаров, категорий, фильтров.
+**Authorization not required** for: search, item browsing, categories, filters.
 
 ---
 
-## 9. Двухшаговый поиск (Search Flow)
+## 9. Two-Step Search (Search Flow)
 
-Поиск работает в два этапа:
+Search works in two steps:
 
-### Шаг 1: Получение конфигурации поиска
+### Step 1: Get search configuration
 ```
 GET /api/v3/search/components?keywords=...&category_id=...&order_by=...&source=search_box
 ```
-Возвращает:
-- `components[]` — компоненты UI (ads_banner, slider, search_results)
-- `search_results.type_data.query_params.search_id` — **уникальный ID сессии поиска**
-- `filters` — доступные фильтры
-- `search_controls` — элементы управления
+Returns:
+- `components[]` — UI components (ads_banner, slider, search_results)
+- `search_results.type_data.query_params.search_id` — **unique search session ID**
+- `filters` — available filters
+- `search_controls` — controls
 
-### Шаг 2: Получение результатов
+### Step 2: Get results
 ```
-GET /api/v3/search/section?keywords=...&category_id=...&order_by=...&search_id=<из шага 1>&latitude=...&longitude=...&section_type=organic_search_results&source=deep_link
+GET /api/v3/search/section?keywords=...&category_id=...&order_by=...&search_id=<from step 1>&latitude=...&longitude=...&section_type=organic_search_results&source=deep_link
 ```
-Возвращает:
-- `data.section.items[]` — массив товаров (до 40 штук)
-- `meta.next_page` — JWT-токен для следующей страницы
+Returns:
+- `data.section.items[]` — array of items (up to 40)
+- `meta.next_page` — JWT token for the next page
 
-### Пагинация
-Для загрузки следующей страницы передайте `meta.next_page` как query parameter `next_page` в тот же endpoint `/api/v3/search/section` с теми же параметрами. Значение — JWT-токен, его нужно URL-encode. Когда `meta.next_page` равен `null` или отсутствует — страницы закончились.
+### Pagination
+To load the next page, pass `meta.next_page` as query parameter `next_page` to the same `/api/v3/search/section` endpoint with the same parameters. The value is a JWT token — URL-encode it. When `meta.next_page` is `null` or absent — no more pages.
 
-### Структура элемента поисковой выдачи
+### Search result item structure
 ```json
 {
   "id": "string",
@@ -565,8 +565,8 @@ GET /api/v3/search/section?keywords=...&category_id=...&order_by=...&search_id=<
 }
 ```
 
-### Альтернативный метод: SSR Scraping
-Для получения полных данных товара можно парсить `__NEXT_DATA__` из HTML:
+### Alternative method: SSR Scraping
+To get full item data, parse `__NEXT_DATA__` from the HTML:
 ```bash
 curl -s 'https://es.wallapop.com/item/<slug>' | python3 -c "
 import sys, re, json
@@ -577,17 +577,17 @@ item = data['props']['pageProps']['item']
 print(json.dumps(item, indent=2))
 "
 ```
-Это работает без специальных хедеров и возвращает полную модель Item.
+Works without special headers and returns the full Item model.
 
 ---
 
-## 10. Технический стек фронтенда
+## 10. Frontend Tech Stack
 
 - **Framework:** Next.js (SSR + CSR)
 - **State Management:** Jotai
 - **I18n:** React Intl
 - **Error Tracking:** Sentry
 - **Analytics:** Amplitude, RudderStack (tracking.wallapop.com)
-- **Feature Flags:** Собственный сервис (feature-flag.wallapop.com)
-- **Auth:** Собственная система + Google/Facebook OAuth
+- **Feature Flags:** Custom service (feature-flag.wallapop.com)
+- **Auth:** Custom system + Google/Facebook OAuth
 - **Consent:** Didomi (CMP)
